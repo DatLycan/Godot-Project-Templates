@@ -1,5 +1,5 @@
 # Default Template
-This is the template for my default project structure for Godot 4.x
+This is the template for my default project structure for Godot 4.x. <br/>
 Feel free to use it as you like!
 
 ## Credits
