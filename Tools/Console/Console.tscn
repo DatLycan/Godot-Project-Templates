@@ -1,0 +1,80 @@
+[gd_scene load_steps=5 format=3 uid="uid://clmp5qggcc0qs"]
+
+[ext_resource type="Script" path="res://Tools/Console/Console.gd" id="1_y8qx3"]
+[ext_resource type="CodeHighlighter" path="res://Tools/Console/SyntaxHighlighter.tres" id="2_qclii"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6syc"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rmnv7"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="Console" type="CanvasLayer" node_paths=PackedStringArray("output", "input")]
+process_mode = 3
+layer = 128
+script = ExtResource("1_y8qx3")
+output = NodePath("Container/Output")
+input = NodePath("Container/HBoxContainer/Input")
+
+[node name="Darken" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.137255)
+
+[node name="Container" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Spacer" type="ColorRect" parent="Container"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Output" type="TextEdit" parent="Container"]
+layout_mode = 2
+theme_override_constants/line_spacing = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_o6syc")
+theme_override_styles/read_only = SubResource("StyleBoxFlat_rmnv7")
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+syntax_highlighter = ExtResource("2_qclii")
+scroll_fit_content_height = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container"]
+layout_mode = 2
+
+[node name="Input" type="CodeEdit" parent="Container/HBoxContainer" node_paths=PackedStringArray("shortcut_context")]
+custom_minimum_size = Vector2(500, 30)
+layout_mode = 2
+shortcut_context = NodePath("")
+wrap_mode = 1
+draw_control_chars = true
+draw_tabs = true
+draw_spaces = true
+syntax_highlighter = ExtResource("2_qclii")
+scroll_smooth = true
+scroll_fit_content_height = true
+caret_blink = true
+caret_multiple = false
+code_completion_enabled = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+
+[node name="ColorRect" type="ColorRect" parent="Container/HBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[connection signal="code_completion_requested" from="Container/HBoxContainer/Input" to="." method="_on_code_completion_requested"]

@@ -1,0 +1,128 @@
+[gd_scene load_steps=21 format=3 uid="uid://dkrbanxjoej5j"]
+
+[ext_resource type="Script" path="res://Managers/AppManager/AppManager.gd" id="1_h77xh"]
+[ext_resource type="Script" path="res://addons/imjp94.yafsm/src/StateMachinePlayer.gd" id="2_mh12j"]
+[ext_resource type="Script" path="res://addons/imjp94.yafsm/src/states/StateMachine.gd" id="3_wtioy"]
+[ext_resource type="Script" path="res://addons/imjp94.yafsm/src/states/State.gd" id="4_p1i15"]
+[ext_resource type="Script" path="res://addons/imjp94.yafsm/src/transitions/Transition.gd" id="5_clfac"]
+[ext_resource type="Script" path="res://addons/imjp94.yafsm/src/conditions/Condition.gd" id="6_0y5vu"]
+
+[sub_resource type="Resource" id="Resource_xvsdu"]
+script = ExtResource("4_p1i15")
+name = "Entry"
+metadata/graph_offset = Vector2(566, 622)
+
+[sub_resource type="Resource" id="Resource_kj3vb"]
+script = ExtResource("4_p1i15")
+name = "Exit"
+metadata/graph_offset = Vector2(826, 742)
+
+[sub_resource type="Resource" id="Resource_y2ttu"]
+script = ExtResource("4_p1i15")
+name = "Entry"
+metadata/graph_offset = Vector2(482.667, 549.708)
+
+[sub_resource type="Resource" id="Resource_onrd8"]
+script = ExtResource("4_p1i15")
+name = "Exit"
+metadata/graph_offset = Vector2(906, 542)
+
+[sub_resource type="Resource" id="Resource_w4rh8"]
+script = ExtResource("5_clfac")
+from = "Entry"
+to = "Exit"
+conditions = {}
+priority = 0
+
+[sub_resource type="Resource" id="Resource_58hm6"]
+script = ExtResource("3_wtioy")
+states = {
+"Entry": SubResource("Resource_y2ttu"),
+"Exit": SubResource("Resource_onrd8")
+}
+transitions = {
+"Entry": {
+"Exit": SubResource("Resource_w4rh8")
+}
+}
+name = "Game"
+metadata/graph_offset = Vector2(1084, 622)
+
+[sub_resource type="Resource" id="Resource_570yb"]
+script = ExtResource("4_p1i15")
+name = "MainMenu"
+metadata/graph_offset = Vector2(810.5, 622)
+
+[sub_resource type="Resource" id="Resource_pcmdg"]
+script = ExtResource("5_clfac")
+from = "Entry"
+to = "MainMenu"
+conditions = {}
+priority = 0
+
+[sub_resource type="Resource" id="Resource_5iwv4"]
+script = ExtResource("5_clfac")
+from = "Game"
+to = "MainMenu"
+conditions = {}
+priority = 0
+
+[sub_resource type="Resource" id="Resource_qeluj"]
+script = ExtResource("6_0y5vu")
+name = "quit"
+
+[sub_resource type="Resource" id="Resource_k6373"]
+script = ExtResource("5_clfac")
+from = "MainMenu"
+to = "Exit"
+conditions = {
+"quit": SubResource("Resource_qeluj")
+}
+priority = 0
+
+[sub_resource type="Resource" id="Resource_5uv2c"]
+script = ExtResource("6_0y5vu")
+name = "start"
+
+[sub_resource type="Resource" id="Resource_4ljtq"]
+script = ExtResource("5_clfac")
+from = "MainMenu"
+to = "Game"
+conditions = {
+"start": SubResource("Resource_5uv2c")
+}
+priority = 0
+
+[sub_resource type="Resource" id="Resource_xk6b0"]
+script = ExtResource("3_wtioy")
+states = {
+"Entry": SubResource("Resource_xvsdu"),
+"Exit": SubResource("Resource_kj3vb"),
+"Game": SubResource("Resource_58hm6"),
+"MainMenu": SubResource("Resource_570yb")
+}
+transitions = {
+"Entry": {
+"MainMenu": SubResource("Resource_pcmdg")
+},
+"Game": {
+"MainMenu": SubResource("Resource_5iwv4")
+},
+"MainMenu": {
+"Exit": SubResource("Resource_k6373"),
+"Game": SubResource("Resource_4ljtq")
+}
+}
+name = ""
+
+[node name="App" type="Node" node_paths=PackedStringArray("state")]
+script = ExtResource("1_h77xh")
+state = NodePath("StateMachine")
+scene_data_directory = "res://Managers/SceneManager/Scenes"
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("2_mh12j")
+state_machine = SubResource("Resource_xk6b0")
+autostart = false
+
+[connection signal="pushed" from="StateMachine" to="." method="_on_state_pushed"]
